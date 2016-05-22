@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">IO control</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_send">Send</string>
+    <string name="action_settings">Settings</string>
+    <string name="led_red">LED red</string>
+    <string name="led_blue">LED blue</string>
+    <string name="led_green">LED green</string>
+    <string name="led_white">LED white</string>
+    <string name="txt_ledRed">RED</string>
+    <string name="txt_ledBlue">BLUE</string>
+    <string name="txt_ledGreen">GREEN</string>
+    <string name="txt_ledWhite">WHITE</string>
+
+</resources>
