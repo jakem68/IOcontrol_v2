@@ -1,36 +1,36 @@
 package com.example.jan.myfirstapp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ListViewCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-//import android.widget.Toast;
-
-import java.io.IOException;
-//import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
+import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.List;
+import java.util.ArrayList;
+
+//import android.widget.Toast;
+//import java.io.OutputStream;
 
 
-public class MyActivity extends AppCompatActivity {
+public class MyActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
     public final static String EXTRA_MESSAGE = "com.example.jan.myfirstapp.MESSAGE";
-
-    private Socket socket;
-
     private static final int serverPort = 44332;
     private static final String serverIP = "192.168.4.1";
-
+    int _nrButtons = 12;
+    ToggleButton[] _myToggleButtons;
+    private Socket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +38,28 @@ public class MyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my);
 
         new Thread(new ClientThread()).start();
-        int nrSwitches = 16;
-        for(int i=0; i<nrSwitches; i++) {
-                String switchID = "R.id.switch" + i;
-                int resID = getResources().getIdentifier(switchID, "id", "com.example.jan");
-                SwitchCompat switchCompati = (SwitchCompat) findViewById(resID);
-                switchCompati.setOnCheckedChangeListener(onCheckedChanged());
+
+
+        _myToggleButtons = new ToggleButton[_nrButtons];
+
+        for(int i=0; i<_nrButtons; i++) {
+            //look for the "ID" of switch i
+            String toggleButtonID = "toggleButton" + (i+1);
+
+            //get the "resource ID" of switch i
+            int resID = getResources().getIdentifier(toggleButtonID, "id", getPackageName());
+
+            Log.d("TAG", Float.toString(resID));
+
+            //myToggleButton for ToggleButton i
+            _myToggleButtons[i] = (ToggleButton) findViewById(resID);
+            _myToggleButtons[i].setOnCheckedChangeListener(this);
+            _myToggleButtons[i].setTextOff("Led "+(i+1));
+            _myToggleButtons[i].setTextOn("Led "+(i+1));
+
         }
+
+
 //        SwitchCompat switchCompat1 = (SwitchCompat) findViewById(R.id.switch1);
 //        switchCompat1.setOnCheckedChangeListener(onCheckedChanged());
 //        SwitchCompat switchCompat2 = (SwitchCompat) findViewById(R.id.switch2);
@@ -89,25 +104,15 @@ public class MyActivity extends AppCompatActivity {
         out.flush();
         out.close();
     }
+////////////////////////////////////////////////////////////////////////////////////
+////UITWERKEN MET ACTIES OP ONCHECKEDCHANGED -- ONCHECKEDCHANGED HIERONDER VERVANGEN
+////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-    class ClientThread implements Runnable {
-
-        @Override
-        public void run() {
-
-            try {
-                InetAddress serverAddr = InetAddress.getByName(serverIP);
-
-                socket = new Socket(serverAddr, serverPort);
-
-            } catch (UnknownHostException e1){
-                e1.printStackTrace();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
     }
 
+///////////////////TO BE REWORKED!!!!!!!!!!!!!!!!!!!!!!!!
     //called when a toggle switch changes state
     private CompoundButton.OnCheckedChangeListener onCheckedChanged() {
         return new CompoundButton.OnCheckedChangeListener() {
@@ -190,6 +195,24 @@ public class MyActivity extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    class ClientThread implements Runnable {
+
+        @Override
+        public void run() {
+
+            try {
+                InetAddress serverAddr = InetAddress.getByName(serverIP);
+
+                socket = new Socket(serverAddr, serverPort);
+
+            } catch (UnknownHostException e1){
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 }
 
