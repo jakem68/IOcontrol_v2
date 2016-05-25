@@ -29,7 +29,7 @@ public class MyActivity extends AppCompatActivity implements CompoundButton.OnCh
     private static final int serverPort = 44332;
     private static final String serverIP = "192.168.4.1";
     int _nrButtons = 12;
-    ToggleButton[] _myToggleButtons;
+    ToggleButton[] _myToggleButtons = new ToggleButton[_nrButtons];
     private Socket socket;
 
     @Override
@@ -38,9 +38,6 @@ public class MyActivity extends AppCompatActivity implements CompoundButton.OnCh
         setContentView(R.layout.activity_my);
 
         new Thread(new ClientThread()).start();
-
-
-        _myToggleButtons = new ToggleButton[_nrButtons];
 
         for(int i=0; i<_nrButtons; i++) {
             //look for the "ID" of switch i
@@ -58,8 +55,6 @@ public class MyActivity extends AppCompatActivity implements CompoundButton.OnCh
             _myToggleButtons[i].setTextOn("Led "+(i+1));
 
         }
-
-
 //        SwitchCompat switchCompat1 = (SwitchCompat) findViewById(R.id.switch1);
 //        switchCompat1.setOnCheckedChangeListener(onCheckedChanged());
 //        SwitchCompat switchCompat2 = (SwitchCompat) findViewById(R.id.switch2);
@@ -68,8 +63,6 @@ public class MyActivity extends AppCompatActivity implements CompoundButton.OnCh
 //        switchCompat3.setOnCheckedChangeListener(onCheckedChanged());
 //        SwitchCompat switchCompat4 = (SwitchCompat) findViewById(R.id.switch4);
 //        switchCompat4.setOnCheckedChangeListener(onCheckedChanged());
-
-
     }
 
     /** Called when the user clicks the Send button */
@@ -104,14 +97,63 @@ public class MyActivity extends AppCompatActivity implements CompoundButton.OnCh
         out.flush();
         out.close();
     }
-////////////////////////////////////////////////////////////////////////////////////
-////UITWERKEN MET ACTIES OP ONCHECKEDCHANGED -- ONCHECKEDCHANGED HIERONDER VERVANGEN
-////////////////////////////////////////////////////////////////////////////////////
-    @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        int resID;
+        String isCheckedValue;
+        if (isChecked){
+            isCheckedValue = "1";
+        }
+        else {
+            isCheckedValue = "0";
+        }
 
+        for (int i=0; i<_nrButtons; i++) {
+            ToggleButton myToggleButton = _myToggleButtons[i];
+            String toggleButtonID = "toggleButton" + (i+1);
+            //get the "resource ID" of switch i
+            resID = getResources().getIdentifier(toggleButtonID, "id", getPackageName());
+            if (buttonView.getId()==resID){
+                //createMessage
+                String message = (Integer.toString(i+1)+","+isCheckedValue);
+                    Log.d("TAG", message);
+                try {
+                    sendMessage(message);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
+
+//    http://stackoverflow.com/questions/15732307/how-to-tell-which-button-was-clicked-in-onclick
+//    @Override
+//    public void onClick(View v) {
+//        // TODO Auto-generated method stub
+//        switch(v.getId())
+//        {
+//            case R.id.button1 :
+//                Toast.makeText(MainActivity.this,"button1", 1000).show();
+//                break;
+//            case R.id.button2 :
+//                Toast.makeText(MainActivity.this,"button2", 1000).show();
+//                break;
+//            case R.id.button3 :
+//                Toast.makeText(MainActivity.this,"button3", 1000).show();
+//                break;
+//
+//
+//        }
+//
+//    }
+
+
+
+
+
+//
+/*
+//    http://stackoverflow.com/questions/15732307/how-to-tell-which-button-was-clicked-in-onclick
 ///////////////////TO BE REWORKED!!!!!!!!!!!!!!!!!!!!!!!!
     //called when a toggle switch changes state
     private CompoundButton.OnCheckedChangeListener onCheckedChanged() {
@@ -196,6 +238,9 @@ public class MyActivity extends AppCompatActivity implements CompoundButton.OnCh
             }
         };
     }
+*/
+
+//
 
     class ClientThread implements Runnable {
 
