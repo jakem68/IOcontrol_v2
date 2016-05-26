@@ -50,9 +50,10 @@ public class MyActivity extends AppCompatActivity implements CompoundButton.OnCh
 
             //myToggleButton for ToggleButton i
             _myToggleButtons[i] = (ToggleButton) findViewById(resID);
-            _myToggleButtons[i].setOnCheckedChangeListener(this);
             _myToggleButtons[i].setTextOff("Led "+(i+1));
             _myToggleButtons[i].setTextOn("Led "+(i+1));
+            _myToggleButtons[i].setChecked(false);
+            _myToggleButtons[i].setOnCheckedChangeListener(this);
 
         }
 //        SwitchCompat switchCompat1 = (SwitchCompat) findViewById(R.id.switch1);
@@ -106,6 +107,8 @@ public class MyActivity extends AppCompatActivity implements CompoundButton.OnCh
         else {
             isCheckedValue = "0";
         }
+////////////////TODO: Try to make a fancy button
+//        http://angrytools.com/android/button/
 
         for (int i=0; i<_nrButtons; i++) {
             ToggleButton myToggleButton = _myToggleButtons[i];
